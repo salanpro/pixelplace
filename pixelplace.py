@@ -94,7 +94,7 @@ def handle_undo():
     global pixels
     if history:
         pixels = history.pop()
-        emit("load_canvas", pixels, broadcast=True)
+        emit("load_canvas", pixels, broadcast=True, include_self=True)
 
 if __name__ == "__main__":
     socketio.run(app, host="0.0.0.0", port=5000)
