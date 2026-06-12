@@ -59,6 +59,7 @@ let drawing = false;
 
 canvas.addEventListener("mousedown", (e) => {
   drawing = true;
+  socket.emit("start_stroke");  
   handleDraw(e);
 });
 canvas.addEventListener("mouseup", () => {
@@ -73,7 +74,10 @@ canvas.addEventListener("mousemove", (e) => {
 });
 
 
-canvas.addEventListener("touchstart", handleDraw);
+canvas.addEventListener("touchstart", (e) => {
+  socket.emit("start_stroke");  
+  handleDraw(e);
+});
 canvas.addEventListener("touchmove", handleDraw);
 
 
@@ -113,4 +117,17 @@ const setBgColorBtn = document.getElementById("setBgColorBtn");
 setBgColorBtn.addEventListener("click", () => {
   const newColor = bgColorInput.value;
   socket.emit("change_bgcolor", { color: newColor });
+});
+
+function undoCanvas() {
+  socket.emit("undo");
+}
+
+document.getElementById("undoBtn").addEventListener("click", undoCanvas);
+
+document.addEventListener("keydown", (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.key === "z") {
+    e.preventDefault();
+    undoCanvas();
+  }
 });
